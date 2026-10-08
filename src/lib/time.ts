@@ -50,12 +50,12 @@ export function getWeek(offset: number, weekStartsOn: 0 | 1 = WEEK_STARTS_ON) {
 export function weekLabel(start: Date, end: Date): string {
   const sameMonth = start.getMonth() === end.getMonth();
   if (sameMonth) {
-    return `${format(start, "d")}\u2013${format(end, "d MMM yyyy")}`;
+    return `${format(start, "d")}–${format(end, "d MMM yyyy")}`;
   }
   if (start.getFullYear() === end.getFullYear()) {
-    return `${format(start, "d MMM")} \u2013 ${format(end, "d MMM yyyy")}`;
+    return `${format(start, "d MMM")} – ${format(end, "d MMM yyyy")}`;
   }
-  return `${format(start, "d MMM yyyy")} \u2013 ${format(end, "d MMM yyyy")}`;
+  return `${format(start, "d MMM yyyy")} – ${format(end, "d MMM yyyy")}`;
 }
 
 export function clampMinutes(value: number): number {
@@ -73,7 +73,7 @@ export function joinMinutes(hours: number, minutes: number): number {
 }
 
 export function formatDuration(totalMinutes: number): string {
-  const sign = totalMinutes < 0 ? "\u2212" : "";
+  const sign = totalMinutes < 0 ? "−" : "";
   const abs = Math.abs(Math.round(totalMinutes));
   const hours = Math.floor(abs / 60);
   const minutes = abs % 60;
@@ -83,7 +83,7 @@ export function formatDuration(totalMinutes: number): string {
 }
 
 export function formatDurationCompact(totalMinutes: number): string {
-  const sign = totalMinutes < 0 ? "\u2212" : "";
+  const sign = totalMinutes < 0 ? "−" : "";
   const abs = Math.abs(Math.round(totalMinutes));
   const hours = Math.floor(abs / 60);
   const minutes = abs % 60;
@@ -101,10 +101,10 @@ export function parseDuration(input: string): number | null {
   if (colon) return joinMinutes(Number(colon[1]), Number(colon[2]));
 
   const hourMatch = raw.match(
-    /(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h|ura|ure|ur)(?![a-z\u010d\u0161\u017e])/i,
+    /(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h|ura|ure|ur)(?![a-zčšž])/i,
   );
   const minMatch = raw.match(
-    /(\d+)\s*(?:minutes?|mins?|minuta|minute|minut|m)(?![a-z\u010d\u0161\u017e])/i,
+    /(\d+)\s*(?:minutes?|mins?|minuta|minute|minut|m)(?![a-zčšž])/i,
   );
 
   let hours = 0;
@@ -146,7 +146,7 @@ export type DurationParts = {
 };
 
 export function durationParts(totalMinutes: number): DurationParts {
-  const sign = totalMinutes < 0 ? "\u2212" : "";
+  const sign = totalMinutes < 0 ? "−" : "";
   const abs = Math.abs(Math.round(totalMinutes));
   const hours = Math.floor(abs / 60);
   const minutes = abs % 60;
