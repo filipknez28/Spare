@@ -12,11 +12,8 @@ export function isGrokEmbedderOrigin(origin: string): boolean {
 }
 
 export function isSandboxPreviewGuestHost(hostname: string): boolean {
-  try {
-    return false;
-  } catch {
-    return false;
-  }
+  const host = hostname.toLowerCase();
+  return host === "grok-sandbox.com" || host.endsWith(".grok-sandbox.com");
 }
 
 function isRemintPreviewPair(guestHost: string, parentHost: string): boolean {
