@@ -113,3 +113,21 @@
     animation: none;
   }
 }
+
+@keyframes spare-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.spare-shake {
+  animation: spare-shake 400ms ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spare-shake {
+    animation: none;
+  }
+}
