@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { DownloadZipButton } from "@/components/download-zip";
 import { TimeField } from "@/components/time-field";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -127,7 +126,6 @@ export function BudgetSheet({ open, onClose }: BudgetSheetProps) {
           <Button type="button" size="lg" className="w-full" onClick={save}>
             Save budget
           </Button>
-          <DownloadZipButton />
           <Button
             type="button"
             variant={confirmReset ? "destructive" : "ghost"}
@@ -185,7 +183,6 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           >
             Start tracking
           </Button>
-          <DownloadZipButton />
         </div>
       </div>
     </main>

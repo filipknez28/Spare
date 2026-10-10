@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight, Plus, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Toaster } from "sonner";
-import { DownloadZipIcon } from "@/components/download-zip";
 import { DurationHero, DurationInline } from "@/components/duration";
 import { BudgetSheet, LogSheet, Onboarding } from "@/components/sheets";
 import { Button } from "@/components/ui/button";
@@ -66,7 +65,6 @@ export function Ledger() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <DownloadZipIcon />
             <Button
               type="button"
               variant="secondary"
