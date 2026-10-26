@@ -1,0 +1,8 @@
+{
+  "appId": "com.filipknez.spare",
+  "appName": "Spare",
+  "webDir": "www",
+  "server": {
+    "url": "https://spareslo.vercel.app"
+  }
+}
