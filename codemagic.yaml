@@ -5,20 +5,14 @@ workflows:
     instance_type: mac_mini_m2
     max_build_duration: 30
     environment:
-      node: 22
       xcode: latest
       vars:
         BUNDLE_ID: com.filipknez.spare
     scripts:
-      - name: Node in Capacitor sync
-        script: |
-          npm install
-          npm i -D @capacitor/cli @capacitor/core @capacitor/ios
-          npx cap sync ios
       - name: Build unsigned .ipa
         script: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/App.app Payload/
           zip -qr Spare.ipa Payload
