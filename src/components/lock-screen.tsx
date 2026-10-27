@@ -63,7 +63,7 @@ export function LockScreen({ account, onUnlock }: LockScreenProps) {
   };
 
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center justify-between px-6 pb-10 pt-14">
+    <main className="relative mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center justify-between px-6 pb-10 pt-[calc(3.5rem+env(safe-area-inset-top))]">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(120%_80%_at_50%_0%,color-mix(in_oklab,var(--color-sage)_14%,transparent),transparent)]"

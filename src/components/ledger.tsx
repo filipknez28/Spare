@@ -57,7 +57,7 @@ export function Ledger({ account }: { account: SpareAccount | null }) {
 
   return (
     <div className="min-h-dvh w-full bg-background text-foreground">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-5 pb-28 pt-6 sm:gap-12 sm:px-8 sm:pb-16 sm:pt-10">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-5 pb-28 pt-[calc(1.5rem+env(safe-area-inset-top))] sm:gap-12 sm:px-8 sm:pb-16 sm:pt-[calc(2.5rem+env(safe-area-inset-top))]">
         <header className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="font-display italic text-3xl leading-none tracking-tight">

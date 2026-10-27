@@ -61,7 +61,7 @@ export function AccountOnboarding({
   return (
     <main
       className={cn(
-        "mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center px-6 pb-10 pt-16 sm:justify-center sm:pt-8",
+        "mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center px-6 pb-10 pt-[calc(4rem+env(safe-area-inset-top))] sm:justify-center sm:pt-[calc(2rem+env(safe-area-inset-top))]",
       )}
     >
       {step === "welcome" ? (

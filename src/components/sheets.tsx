@@ -153,7 +153,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
   const [value, setValue] = useState(120);
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col px-5 py-8 sm:px-8 sm:py-12 lg:justify-center">
+    <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col px-5 pb-8 pt-[calc(2rem+env(safe-area-inset-top))] sm:px-8 sm:pb-12 sm:pt-[calc(3rem+env(safe-area-inset-top))] lg:justify-center">
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
         <div className="spare-rise max-w-md">
           <p className="font-display italic text-3xl tracking-tight">Spare</p>
