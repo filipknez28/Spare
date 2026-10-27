@@ -1,61 +1,85 @@
-import { Delete } from "lucide-react";
 import { useState } from "react";
+import { Keypad, PinDots } from "@/components/keypad";
+import {
+  clearAccount,
+  verifyPin,
+  type SpareAccount,
+} from "@/lib/passcode";
 import { cn } from "@/lib/utils";
 
-const CODE = "282013";
-const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "del"] as const;
+type LockScreenProps = {
+  account: SpareAccount | null;
+  onUnlock: () => void;
+};
 
-export function LockScreen({ onUnlock }: { onUnlock: () => void }) {
+export function LockScreen({ account, onUnlock }: LockScreenProps) {
+  const pinLength = account?.pinLength ?? 6;
   const [digits, setDigits] = useState("");
   const [wrong, setWrong] = useState(false);
   const [shake, setShake] = useState(0);
+  const [checking, setChecking] = useState(false);
+  const [resetArm, setResetArm] = useState(false);
 
   const push = (key: string) => {
-    if (key === "del") {
+    if (key === "delete") {
       setWrong(false);
       setDigits((current) => current.slice(0, -1));
       return;
     }
-    if (!key || digits.length >= CODE.length) return;
+    if (!key || digits.length >= pinLength || checking) return;
     const next = digits + key;
     setDigits(next);
     setWrong(false);
-    if (next.length === CODE.length) {
-      if (next === CODE) {
-        onUnlock();
-        return;
-      }
-      setWrong(true);
-      setShake((n) => n + 1);
-      window.setTimeout(() => setDigits(""), 420);
+    if (next.length === pinLength) {
+      setChecking(true);
+      void verifyPin(next).then((ok) => {
+        setChecking(false);
+        if (ok) {
+          onUnlock();
+          return;
+        }
+        setWrong(true);
+        setShake((n) => n + 1);
+        window.setTimeout(() => {
+          setDigits("");
+          setWrong(false);
+        }, 520);
+      });
     }
   };
 
+  const reset = () => {
+    if (!resetArm) {
+      setResetArm(true);
+      return;
+    }
+    clearAccount();
+    try {
+      localStorage.removeItem("spare-ledger-v1");
+    } catch {
+      // ignore
+    }
+    window.location.reload();
+  };
+
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center justify-between px-6 py-12">
-      <div className="flex w-full flex-col items-center pt-6">
+    <main className="relative mx-auto flex min-h-dvh w-full max-w-sm flex-col items-center justify-between px-6 pb-10 pt-14">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(120%_80%_at_50%_0%,color-mix(in_oklab,var(--color-sage)_14%,transparent),transparent)]"
+      />
+      <div className="relative flex w-full flex-col items-center pt-4">
         <p className="font-display italic text-4xl tracking-tight">Spare</p>
-        <p className="mt-8 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-          Enter code
+        <p className="mt-6 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          {account?.name ? `Welcome back, ${account.name}` : "Enter passcode"}
         </p>
-        <div
-          key={shake}
-          className={cn("mt-6 flex gap-3", wrong && "spare-shake")}
-          aria-label="Code"
-        >
-          {Array.from({ length: CODE.length }, (_, index) => (
-            <span
-              key={index}
-              className={cn(
-                "size-2.5 rounded-full transition-colors duration-150",
-                digits.length > index
-                  ? wrong
-                    ? "bg-rust"
-                    : "bg-foreground"
-                  : "bg-border",
-              )}
-            />
-          ))}
+        <div className="mt-6">
+          <PinDots
+            length={pinLength}
+            filled={digits.length}
+            wrong={wrong}
+            shakeKey={shake}
+          />
         </div>
         <p
           className={cn(
@@ -63,26 +87,26 @@ export function LockScreen({ onUnlock }: { onUnlock: () => void }) {
             wrong ? "opacity-100" : "opacity-0",
           )}
         >
-          Wrong code
+          Wrong passcode
         </p>
       </div>
 
-      <div className="grid w-full max-w-[280px] grid-cols-3 gap-3">
-        {KEYS.map((key) => {
-          if (key === "") return <span key="gap" />;
-          const label = key === "del" ? "Delete" : key;
-          return (
-            <button
-              key={key}
-              type="button"
-              aria-label={label}
-              onClick={() => push(key)}
-              className="flex h-16 items-center justify-center rounded-2xl bg-card text-2xl font-medium tabular-nums text-foreground shadow-border transition-[background-color,transform] duration-150 active:scale-[0.96] active:bg-accent"
-            >
-              {key === "del" ? <Delete className="size-5" /> : key}
-            </button>
-          );
-        })}
+      <div className="relative flex w-full flex-col items-center gap-5">
+        <Keypad onPress={push} disabled={checking} />
+        <button
+          type="button"
+          onClick={reset}
+          className={cn(
+            "text-xs underline-offset-4 transition-colors",
+            resetArm
+              ? "font-medium text-rust underline"
+              : "text-muted-foreground hover:underline",
+          )}
+        >
+          {resetArm
+            ? "Forgot passcode? Tap again to reset the app (erases all data)"
+            : "Forgot passcode?"}
+        </button>
       </div>
     </main>
   );

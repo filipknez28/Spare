@@ -2,10 +2,12 @@ import { ChevronLeft, ChevronRight, Plus, Settings2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { DurationHero, DurationInline } from "@/components/duration";
+import { AccountSheet } from "@/components/account-sheet";
 import { BudgetSheet, LogSheet, Onboarding } from "@/components/sheets";
 import { Button } from "@/components/ui/button";
 import { WeekHistory } from "@/components/week-history";
 import { WeekStrip } from "@/components/week-strip";
+import { readAccount, type SpareAccount } from "@/lib/passcode";
 import { totalsForKeys, useRehydrateSpare, useSpareStore } from "@/lib/store";
 import {
   formatDuration,
@@ -16,7 +18,7 @@ import {
 } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
-export function Ledger() {
+export function Ledger({ account }: { account: SpareAccount | null }) {
   useRehydrateSpare();
   const allowance = useSpareStore((s) => s.dailyAllowanceMinutes);
   const logs = useSpareStore((s) => s.logs);
@@ -24,6 +26,7 @@ export function Ledger() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [logKey, setLogKey] = useState<string | null>(null);
   const [budgetOpen, setBudgetOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   const week = useMemo(() => getWeek(weekOffset), [weekOffset]);
   const totals = useMemo(
@@ -65,6 +68,21 @@ export function Ledger() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {account ? (
+              <button
+                type="button"
+                onClick={() => setAccountOpen(true)}
+                aria-label="Account"
+                className="flex items-center gap-2 rounded-full bg-card py-1 pl-1 pr-2 shadow-border transition-colors hover:bg-accent"
+              >
+                <span className="grid size-8 place-items-center rounded-full bg-sage-soft text-sm font-semibold text-sage">
+                  {account.name.charAt(0).toUpperCase()}
+                </span>
+                <span className="hidden text-sm font-medium sm:block">
+                  {account.name}
+                </span>
+              </button>
+            ) : null}
             <Button
               type="button"
               variant="secondary"
@@ -211,7 +229,7 @@ export function Ledger() {
       </div>
 
       {weekOffset === 0 ? (
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur-sm sm:hidden">
+        <div className="pb-safe fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 px-5 py-3 backdrop-blur-sm sm:hidden">
           <Button
             type="button"
             size="lg"
@@ -226,6 +244,11 @@ export function Ledger() {
 
       <LogSheet dateKey={logKey} onClose={() => setLogKey(null)} />
       <BudgetSheet open={budgetOpen} onClose={() => setBudgetOpen(false)} />
+      <AccountSheet
+        open={accountOpen}
+        account={account}
+        onClose={() => setAccountOpen(false)}
+      />
       <Toaster
         position="bottom-center"
         toastOptions={{
